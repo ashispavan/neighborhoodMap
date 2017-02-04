@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Neighborhood Map</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+
+<body>
+    <div class="container">
+        <div class="listings">
+        	<h1>Neighborhood Map</h1>
+            <input id="search" data-bind="event: {keyup: filterList}"></input>
+            <div class="locations">
+                <ul data-bind="foreach: currentModel().listItems">
+                    <a href="#" data-bind="text: $data, click: $parent.showInfoWindow" class="list-group-item"></a>
+                </ul>
+            </div>
+        </div>
+        <div id="map">
+        </div>
+    </div>
+    <script src="js/jquery.js"></script>
+    <script src="js/knockout-min.js"></script>
+    <script src="app.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLa-R5qBXWWp1_2hE2fiALognYzfOMjpk&v=3&callback=initMap">
+    </script>
+    
+
+</body>
+
+</html>
