@@ -10,7 +10,7 @@ var locations = [
 ];
 
 var listItems = locations.map(function(item) {
-    return item.title; 
+    return item.title;
 });
 
 function initMap() {
@@ -50,8 +50,15 @@ function populateInfoWindow(marker, infowindow) {
         infowindow.marker = marker;
         infowindow.addListener('closeclick', function() {
             infowindow.marker = null;
+            marker.setAnimation(null);
         });
         infowindow.open(map, marker);
+    }
+    for (var i in markers) {
+        markers[i].setAnimation(null);
+        if (markers[i].id == marker.id) {
+            markers[i].setAnimation(google.maps.Animation.BOUNCE);
+        }
     }
 }
 
@@ -71,27 +78,26 @@ var ViewModel = function(largeInfowindow) {
                 return item;
             }
         }).filter(function(element) {
-            return element !== undefined; });
+            return element !== undefined;
+        });
 
         self.currentModel().listItems(newArray);
 
-        markers.forEach(function(marker){
-          if(newArray.includes(marker.title)){
-            marker.setVisible(true);
-          }
-          else{
-            marker.setVisible(false);
-          }
+        markers.forEach(function(marker) {
+            if (newArray.includes(marker.title)) {
+                marker.setVisible(true);
+            } else {
+                marker.setVisible(false);
+            }
         });
     }
 
     self.showInfoWindow = function(item, event) {
         var clicked = $(event.currentTarget).text().toUpperCase();
-        var selectedMarker = markers.find(function(item){
-          return clicked === item.title.toUpperCase();
+        var selectedMarker = markers.find(function(item) {
+            return clicked === item.title.toUpperCase();
         });
 
         populateInfoWindow(selectedMarker, largeInfowindow);
     }
 };
-

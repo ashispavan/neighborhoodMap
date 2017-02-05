@@ -1,17 +1,43 @@
-html, body { height: 100%; margin: 0; padding: 0; }
-
-#map { 
-	height: 100%;
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
-.listings{
-	width: 25%;
-	height: 100%;
-	border: 1px solid #999;
-	float: left;
-	border-radius: 3px;
+
+#map {
+    height: 100%;
+}
+
+.listings {
+    width: 25%;
+    height: 100%;
+    float: left;
+    border-radius: 3px;
 }
 
 .container {
-	width: 100%;
-	height: 100%;
+    width: 100%;
+    height: 100%;
+}
+
+.list-group-item:focus {
+    z-index: 2;
+    color: #fff !important;
+    background-color: #337ab7 !important;
+    border-color: #337ab7;
+}
+
+#search {
+    margin-left: auto;
+    margin-right: auto;
+    width: 80% !important;
+}
+
+.locations {
+	margin-top: 20px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 80%;
+	padding-left: 0px;
 }
