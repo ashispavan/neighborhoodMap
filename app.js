@@ -74,6 +74,15 @@ var ViewModel = function(largeInfowindow) {
             return element !== undefined; });
 
         self.currentModel().listItems(newArray);
+
+        markers.forEach(function(marker){
+          if(newArray.includes(marker.title)){
+            marker.setVisible(true);
+          }
+          else{
+            marker.setVisible(false);
+          }
+        });
     }
 
     self.showInfoWindow = function(item, event) {
