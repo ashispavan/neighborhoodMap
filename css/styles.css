@@ -9,6 +9,10 @@ body {
     height: 100%;
 }
 
+.heading {
+    margin-left: 28px;
+}
+
 .listings {
     width: 25%;
     height: 100%;

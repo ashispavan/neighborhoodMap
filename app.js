@@ -47,7 +47,7 @@ function initMap() {
 
 function populateInfoWindow(marker, infowindow) {
     var client_id = 'AQSGIQYJFQIUZUAIBNGBWMN0UELAZHYN4HBNTETXQFC1QROG';
-    var client_secret = 'MZUV4WHGSEKL25Z353K0PIRBFAKQEUABDSLLYSEQEWNEZ4FG', content = '', address = '';
+    var client_secret = 'MZUV4WHGSEKL25Z353K0PIRBFAKQEUABDSLLYSEQEWNEZ4FG', content = '', address = '', imgUrl = '';
     var URL = "https://api.foursquare.com/v2/venues/search?v=20161016&ll=" + marker.position.lat() + ", " + marker.position.lng()
     + "&query=" + marker.title + "&intent=checkin&client_id=" + client_id + "&client_secret=" + client_secret;
     
@@ -59,7 +59,8 @@ function populateInfoWindow(marker, infowindow) {
             success: function(data){
                 content = data.response.venues[0].name;
                 address = data.response.venues[0].location.formattedAddress[0];
-                infowindow.setContent('<div>' + '<h5>' + content + '</h5>' + ' <p>' + address + '</p>' + '</div>');
+                imgUrl =  data.response.venues[0].categories[0].icon.prefix + '250' + data.response.venues[0].categories[0].icon.suffix;
+                infowindow.setContent('<div>' + '<h5>' + content + '</h5>' + ' <p>' + address + '</p>' +  '<img src=' + imgUrl + '>' +  '</div>');
                 infowindow.marker = marker;
                 infowindow.addListener('closeclick', function() {
                     infowindow.marker = null;
