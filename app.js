@@ -1,5 +1,6 @@
 var map;
 var markers = [];
+// List of locations
 var locations = [
     { title: 'Burger Joint', location: { lat: 40.7643, lng: -73.9786 } },
     { title: 'Bill\'s Bar and Burger', location: { lat: 40.7593, lng: -73.9775 } },
@@ -12,7 +13,7 @@ var locations = [
 var listItems = locations.map(function(item) {
     return item.title;
 });
-
+// Initialize the Map
 function initMap() {
     var styles = [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#193341"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#2c5a71"}]},{"featureType":"road","elementType":"geometry","stylers":[{"color":"#29768a"},{"lightness":-37}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#3e606f"},{"weight":2},{"gamma":0.84}]},{"elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"weight":0.6},{"color":"#1a3541"}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#2c5a71"}]}];
     map = new google.maps.Map(document.getElementById('map'), {
@@ -25,6 +26,7 @@ function initMap() {
     var largeInfowindow = new google.maps.InfoWindow();
     var bounds = new google.maps.LatLngBounds();
 
+    // Create markers for each of the locations
     for (var i = 0; i < locations.length; i++) {
 
         var position = locations[i].location;
@@ -46,10 +48,11 @@ function initMap() {
     }
 
     map.fitBounds(bounds);
+    // Initialize Knockout ViewModel
     ko.applyBindings(new ViewModel(largeInfowindow));
 }
 
-
+// Populates Info Window based on the selected marker
 function populateInfoWindow(marker, infowindow) {
     var client_id = 'AQSGIQYJFQIUZUAIBNGBWMN0UELAZHYN4HBNTETXQFC1QROG';
     var client_secret = 'MZUV4WHGSEKL25Z353K0PIRBFAKQEUABDSLLYSEQEWNEZ4FG',
@@ -59,6 +62,7 @@ function populateInfoWindow(marker, infowindow) {
         twitter = '';
     var URL = "https://api.foursquare.com/v2/venues/search?v=20161016&ll=" + marker.position.lat() + ", " + marker.position.lng() + "&query=" + marker.title + "&intent=checkin&client_id=" + client_id + "&client_secret=" + client_secret;
 
+    // Fetch data from Foursquare API using the marker's location name and latlng coordinates
     if (infowindow.marker != marker) {
         $.ajax({
             url: URL,
@@ -96,11 +100,13 @@ var ListItemModel = function() {
     this.listItems = ko.observable([]);
 };
 
+// Global info window is passed to the ViewModel to maintain a single instance throughout
 var ViewModel = function(largeInfowindow) {
     var self = this;
     self.currentModel = ko.observable(new ListItemModel());
     self.currentModel().listItems(listItems);
 
+    // Filters location list based on user input
     self.filterList = function() {
         var inputText = document.getElementById('search').value.toUpperCase();
         var newArray = listItems.map(function(item) {
@@ -132,6 +138,7 @@ var ViewModel = function(largeInfowindow) {
     }
 };
 
+// Function for responsive rendering of sidebar
 function resizePage() {
     var width = (window.innerWidth > 0) ? window.innerWidth : document.documentElement.clientWidth;
     if (width < 700) {
@@ -144,7 +151,7 @@ function resizePage() {
 }
 
 $(document).ready(function() {
-
+    // Toggle sidebar
     $('.hamburger').click(function() {
         $(this).toggleClass('is-active');
         $('.listings').toggleClass('active');
