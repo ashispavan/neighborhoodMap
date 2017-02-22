@@ -15,7 +15,7 @@ var listItems = locations.map(function(item) {
 });
 // Initialize the Map
 function initMap() {
-    var styles = [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#193341"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#2c5a71"}]},{"featureType":"road","elementType":"geometry","stylers":[{"color":"#29768a"},{"lightness":-37}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#3e606f"},{"weight":2},{"gamma":0.84}]},{"elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"weight":0.6},{"color":"#1a3541"}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#2c5a71"}]}];
+    var styles = [{ "featureType": "water", "elementType": "geometry", "stylers": [{ "color": "#193341" }] }, { "featureType": "landscape", "elementType": "geometry", "stylers": [{ "color": "#2c5a71" }] }, { "featureType": "road", "elementType": "geometry", "stylers": [{ "color": "#29768a" }, { "lightness": -37 }] }, { "featureType": "poi", "elementType": "geometry", "stylers": [{ "color": "#406d80" }] }, { "featureType": "transit", "elementType": "geometry", "stylers": [{ "color": "#406d80" }] }, { "elementType": "labels.text.stroke", "stylers": [{ "visibility": "on" }, { "color": "#3e606f" }, { "weight": 2 }, { "gamma": 0.84 }] }, { "elementType": "labels.text.fill", "stylers": [{ "color": "#ffffff" }] }, { "featureType": "administrative", "elementType": "geometry", "stylers": [{ "weight": 0.6 }, { "color": "#1a3541" }] }, { "elementType": "labels.icon", "stylers": [{ "visibility": "off" }] }, { "featureType": "poi.park", "elementType": "geometry", "stylers": [{ "color": "#2c5a71" }] }];
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: 40.7413549, lng: -73.9980244 },
         zoom: 13,
@@ -48,8 +48,15 @@ function initMap() {
     }
 
     map.fitBounds(bounds);
+    google.maps.event.addDomListener(window, 'resize', function() {
+        map.fitBounds(bounds);
+    });
     // Initialize Knockout ViewModel
     ko.applyBindings(new ViewModel(largeInfowindow));
+}
+
+function googleError() {
+    alert('Error loading Google Maps');
 }
 
 // Populates Info Window based on the selected marker
@@ -69,11 +76,11 @@ function populateInfoWindow(marker, infowindow) {
             dataType: "json",
             async: true,
             success: function(data) {
-                content = data.response.venues[0].name;
-                address = data.response.venues[0].location.formattedAddress[0];
-                contact = data.response.venues[0].contact.formattedPhone;
+                content = data.response.venues[0].name || 'Name not available';
+                address = data.response.venues[0].location.formattedAddress[0] || 'Address not available';
+                contact = data.response.venues[0].contact.formattedPhone || 'Phone number not available';
                 twitter = data.response.venues[0].contact.twitter || 'NA';
-                infowindow.setContent('<div>' + '<h4>' + content + '</h4>' + ' <h6>' + address + '</h6>' + '<h5>Ph: ' + contact + '</h5>' +  '<h5 style="color:blue">Twitter: ' + twitter + '</h5>' + '</div>');
+                infowindow.setContent('<div>' + '<h4>' + content + '</h4>' + ' <h6>' + address + '</h6>' + '<h5>Ph: ' + contact + '</h5>' + '<h5 style="color:blue">Twitter: ' + twitter + '</h5>' + '</div>');
                 infowindow.marker = marker;
                 infowindow.addListener('closeclick', function() {
                     infowindow.marker = null;
@@ -87,7 +94,7 @@ function populateInfoWindow(marker, infowindow) {
                     }
                 }
             }
-        }).fail(function(){
+        }).fail(function() {
             infowindow.setContent('<h5>Failed to access Foursquare API</h5>');
             infowindow.open(map, marker);
         });
@@ -105,10 +112,11 @@ var ViewModel = function(largeInfowindow) {
     var self = this;
     self.currentModel = ko.observable(new ListItemModel());
     self.currentModel().listItems(listItems);
+    self.queryText = ko.observable('');
 
     // Filters location list based on user input
     self.filterList = function() {
-        var inputText = document.getElementById('search').value.toUpperCase();
+        var inputText = self.queryText().toUpperCase();
         var newArray = listItems.map(function(item) {
             if (item.toUpperCase().includes(inputText)) {
                 return item;
@@ -126,16 +134,16 @@ var ViewModel = function(largeInfowindow) {
                 marker.setVisible(false);
             }
         });
-    }
+    };
 
-    self.showInfoWindow = function(item, event) {
-        var clicked = $(event.currentTarget).text().toUpperCase();
+    self.showInfoWindow = function(place) {
+        var clicked = place.toUpperCase();
         var selectedMarker = markers.find(function(item) {
             return clicked === item.title.toUpperCase();
         });
 
         populateInfoWindow(selectedMarker, largeInfowindow);
-    }
+    };
 };
 
 // Function for responsive rendering of sidebar

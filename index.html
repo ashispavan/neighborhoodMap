@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="css/styles.css">
     <link href="css/hamburgers.min.css" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body>
@@ -18,7 +18,7 @@
                  <span class="hamburger-inner"></span>
                 </span>
             </button>
-            <input id="search" class="form-control" data-bind="event: {keyup: filterList}" placeholder="Search here"></input>
+            <input id="search" class="form-control" data-bind="event: {keyup: filterList}, textInput: queryText" placeholder="Search here"></input>
             <ul data-bind="foreach: currentModel().listItems" class="locations">
                 <a href="#" data-bind="text: $data, click: $parent.showInfoWindow" class="list-group-item"></a>
             </ul>
@@ -32,7 +32,7 @@
     <script src="js/jquery.js"></script>
     <script src="js/knockout-min.js"></script>
     <script src="app.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLa-R5qBXWWp1_2hE2fiALognYzfOMjpk&v=3&callback=initMap">
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLa-R5qBXWWp1_2hE2fiALognYzfOMjpk&v=3&callback=initMap" onerror="googleError()">
     </script>
 </body>
 
